@@ -1,4 +1,4 @@
-.PHONY: tools protoc install demo protoc-Windows protoc-Linux protoc-Darwin
+.PHONY: tools protoc install demo benchmark protoc-Windows protoc-Linux protoc-Darwin
 
 protoc:
 	protoc --gogoslick_out=. simple/*.proto
@@ -8,6 +8,9 @@ install:
 
 demo: install
 	@pbdemo
+
+benchmark:
+	cd benchmarks && go test -bench=.
 
 ### cross-platform check for installing protoc ###
 

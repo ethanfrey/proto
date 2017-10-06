@@ -61,6 +61,27 @@ func benchmarkProtoUnmarshal(b *testing.B, in, out proto.Message) {
 	}
 }
 
+func benchmarkWireMarshal(b *testing.B, in interface{}) {
+	for i := 0; i < b.N; i++ {
+		data := wire.BinaryBytes(in)
+		if len(data) < 3 {
+			panic("no data")
+		}
+	}
+}
+
+func benchmarkProtoMarshal(b *testing.B, in proto.Message) {
+	for i := 0; i < b.N; i++ {
+		data, err := proto.Marshal(in)
+		if err != nil {
+			panic(err)
+		}
+		if len(data) < 3 {
+			panic("no data")
+		}
+	}
+}
+
 func BenchmarkUnmarshal(b *testing.B) {
 	cases := []struct {
 		name    string
@@ -78,6 +99,26 @@ func BenchmarkUnmarshal(b *testing.B) {
 		})
 		b.Run(tc.name+"-wire", func(sub *testing.B) {
 			benchmarkWireUnmarshal(sub, tc.in, tc.wire)
+		})
+	}
+}
+
+func BenchmarkMarshal(b *testing.B) {
+	cases := []struct {
+		name string
+		in   proto.Message
+	}{
+		// cuz, of course, wire is "special" with unmarshalling pointers
+		{"person", makePerson()},
+		{"book", makeBook()},
+	}
+
+	for _, tc := range cases {
+		b.Run(tc.name+"-proto", func(sub *testing.B) {
+			benchmarkProtoMarshal(sub, tc.in)
+		})
+		b.Run(tc.name+"-wire", func(sub *testing.B) {
+			benchmarkWireMarshal(sub, tc.in)
 		})
 	}
 }
