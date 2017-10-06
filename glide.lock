@@ -1,0 +1,8 @@
+hash: 3d2b506ad81030732e9896db5bbe2becbd17b0c61b305c20444ce47cd7dac9f8
+updated: 2017-10-06T11:37:23.506567689+02:00
+imports:
+- name: github.com/gogo/protobuf
+  version: 100ba4e885062801d56799d78530b73b178a78f3
+  subpackages:
+  - proto
+testImports: []
