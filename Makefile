@@ -1,7 +1,7 @@
 .PHONY: tools protoc install demo protoc-Windows protoc-Linux protoc-Darwin
 
 protoc:
-	protoc --gogofast_out=. simple/*.proto
+	protoc --gogoslick_out=. simple/*.proto
 
 install:
 	@go install ./cmd/pbdemo
@@ -51,5 +51,6 @@ tools: protoc-$(MYOS)
 	@go get github.com/gogo/protobuf/proto
 	@go get github.com/gogo/protobuf/gogoproto
 	@go get github.com/gogo/protobuf/protoc-gen-gogofast
+	@go get github.com/gogo/protobuf/protoc-gen-gogoslick
 	@# go get github.com/golang/protobuf/protoc-gen-go
 

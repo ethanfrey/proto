@@ -16,6 +16,9 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
+import strings "strings"
+import reflect "reflect"
+
 import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -36,7 +39,6 @@ type Person struct {
 }
 
 func (m *Person) Reset()                    { *m = Person{} }
-func (m *Person) String() string            { return proto.CompactTextString(m) }
 func (*Person) ProtoMessage()               {}
 func (*Person) Descriptor() ([]byte, []int) { return fileDescriptorSample, []int{0} }
 
@@ -63,6 +65,62 @@ func (m *Person) GetEmail() string {
 
 func init() {
 	proto.RegisterType((*Person)(nil), "simple.Person")
+}
+func (this *Person) Equal(that interface{}) bool {
+	if that == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	}
+
+	that1, ok := that.(*Person)
+	if !ok {
+		that2, ok := that.(Person)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return true
+		}
+		return false
+	} else if this == nil {
+		return false
+	}
+	if this.Name != that1.Name {
+		return false
+	}
+	if this.Age != that1.Age {
+		return false
+	}
+	if this.Email != that1.Email {
+		return false
+	}
+	return true
+}
+func (this *Person) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 7)
+	s = append(s, "&simple.Person{")
+	s = append(s, "Name: "+fmt.Sprintf("%#v", this.Name)+",\n")
+	s = append(s, "Age: "+fmt.Sprintf("%#v", this.Age)+",\n")
+	s = append(s, "Email: "+fmt.Sprintf("%#v", this.Email)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func valueToGoStringSample(v interface{}, typ string) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("func(v %v) *%v { return &v } ( %#v )", typ, typ, pv)
 }
 func (m *Person) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -155,6 +213,26 @@ func sovSample(x uint64) (n int) {
 }
 func sozSample(x uint64) (n int) {
 	return sovSample(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (this *Person) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Person{`,
+		`Name:` + fmt.Sprintf("%v", this.Name) + `,`,
+		`Age:` + fmt.Sprintf("%v", this.Age) + `,`,
+		`Email:` + fmt.Sprintf("%v", this.Email) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func valueToStringSample(v interface{}) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("*%v", pv)
 }
 func (m *Person) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -391,13 +469,15 @@ var (
 func init() { proto.RegisterFile("simple/sample.proto", fileDescriptorSample) }
 
 var fileDescriptorSample = []byte{
-	// 124 bytes of a gzipped FileDescriptorProto
+	// 158 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2e, 0xce, 0xcc, 0x2d,
 	0xc8, 0x49, 0xd5, 0x2f, 0x4e, 0x04, 0x51, 0x7a, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0x42, 0x6c, 0x10,
 	0x41, 0x25, 0x17, 0x2e, 0xb6, 0x80, 0xd4, 0xa2, 0xe2, 0xfc, 0x3c, 0x21, 0x21, 0x2e, 0x96, 0xbc,
 	0xc4, 0xdc, 0x54, 0x09, 0x46, 0x05, 0x46, 0x0d, 0xce, 0x20, 0x30, 0x5b, 0x48, 0x80, 0x8b, 0x39,
 	0x31, 0x3d, 0x55, 0x82, 0x49, 0x81, 0x51, 0x83, 0x35, 0x08, 0xc4, 0x14, 0x12, 0xe1, 0x62, 0x4d,
-	0xcd, 0x4d, 0xcc, 0xcc, 0x91, 0x60, 0x06, 0x2b, 0x83, 0x70, 0x9c, 0x78, 0x4e, 0x3c, 0x92, 0x63,
-	0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x24, 0x36, 0xb0, 0x15, 0xc6, 0x80, 0x00,
-	0x00, 0x00, 0xff, 0xff, 0xa8, 0xc1, 0x64, 0xa2, 0x79, 0x00, 0x00, 0x00,
+	0xcd, 0x4d, 0xcc, 0xcc, 0x91, 0x60, 0x06, 0x2b, 0x83, 0x70, 0x9c, 0x74, 0x2e, 0x3c, 0x94, 0x63,
+	0xb8, 0xf1, 0x50, 0x8e, 0xe1, 0xc3, 0x43, 0x39, 0xc6, 0x86, 0x47, 0x72, 0x8c, 0x2b, 0x1e, 0xc9,
+	0x31, 0x9e, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x2f, 0x1e,
+	0xc9, 0x31, 0x7c, 0x78, 0x24, 0xc7, 0x38, 0xe1, 0xb1, 0x1c, 0x43, 0x12, 0x1b, 0xd8, 0x09, 0xc6,
+	0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x7b, 0x87, 0x44, 0xe7, 0x99, 0x00, 0x00, 0x00,
 }

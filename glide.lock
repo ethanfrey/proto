@@ -1,8 +1,41 @@
-hash: 3d2b506ad81030732e9896db5bbe2becbd17b0c61b305c20444ce47cd7dac9f8
-updated: 2017-10-06T11:37:23.506567689+02:00
+hash: 9375122ba77e44240616101f0c36b922b5c6ee079f72c2dea6d269332ca23181
+updated: 2017-10-06T14:21:52.974511098+02:00
 imports:
+- name: github.com/go-kit/kit
+  version: 9ed37433947b357910facd0e38a8ec110fda62c1
+  subpackages:
+  - log
+  - log/level
+  - log/term
+- name: github.com/go-logfmt/logfmt
+  version: 390ab7935ee28ec6b286364bba9b4dd6410cb3d5
+- name: github.com/go-playground/locales
+  version: 1e5f1161c6416a5ff48840eb8724a394e48cc534
+  subpackages:
+  - currency
+- name: github.com/go-playground/universal-translator
+  version: 71201497bace774495daed26a3874fd339e0b538
+- name: github.com/go-stack/stack
+  version: 817915b46b97fd7bb80e8ab6b69f01a53ac3eebf
 - name: github.com/gogo/protobuf
   version: 100ba4e885062801d56799d78530b73b178a78f3
   subpackages:
   - proto
+- name: github.com/kr/logfmt
+  version: b84e30acd515aadc4b783ad4ff83aff3299bdfe0
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/tendermint/go-wire
+  version: 5f88da3dbc1a72844e6dfaf274ce87f851d488eb
+- name: github.com/tendermint/tmlibs
+  version: 096dcb90e60aa00b748b3fe49a4b95e48ebf1e13
+  subpackages:
+  - common
+  - log
+- name: golang.org/x/crypto
+  version: 9419663f5a44be8b34ca85f08abc5fe1be11f8a3
+  subpackages:
+  - ripemd160
+- name: gopkg.in/go-playground/validator.v9
+  version: a021b2ec9a8a8bb970f3f15bc42617cb520e8a64
 testImports: []
