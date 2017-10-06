@@ -50,9 +50,34 @@ func main() {
 	}
 	out := new(simple.Person)
 
-	fmt.Println("--> simple.Person")
+	fmt.Println("\n--> simple.Person")
 	err := TrialEncodings(in, out)
 	if err != nil {
 		panic(err)
 	}
+
+	p1 := simple.PhoneNumber{
+		Number: "1234567890",
+		Type:   simple.MOBILE,
+	}
+	p2 := simple.PhoneNumber{
+		Number: "abcdefg",
+		Type:   simple.HOME,
+	}
+	p3 := simple.PhoneNumber{
+		Number: "678ftw890",
+		Type:   simple.WORK,
+	}
+
+	bin := &simple.Book{
+		Phones: []*simple.PhoneNumber{&p1, &p2, &p3},
+	}
+	bout := new(simple.Book)
+
+	fmt.Println("\n--> simple.Book")
+	err = TrialEncodings(bin, bout)
+	if err != nil {
+		panic(err)
+	}
+
 }

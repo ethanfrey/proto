@@ -1,0 +1,17 @@
+syntax = "proto3";
+package simple;
+
+enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+}
+
+message PhoneNumber {
+    string number = 1;
+    PhoneType type = 2;
+}
+
+message Book {
+    repeated PhoneNumber phones = 1;
+}
