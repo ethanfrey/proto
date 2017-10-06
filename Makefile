@@ -1,7 +1,13 @@
-.PHONY: tools protoc protoc-Windows protoc-Linux protoc-Darwin
+.PHONY: tools protoc install demo protoc-Windows protoc-Linux protoc-Darwin
 
 protoc:
-	protoc --gogofast_out=. sample.proto
+	protoc --gogofast_out=. simple/*.proto
+
+install:
+	@go install ./cmd/pbdemo
+
+demo: install
+	@pbdemo
 
 ### cross-platform check for installing protoc ###
 
