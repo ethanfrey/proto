@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/ethanfrey/proto/simple"
 	"github.com/gogo/protobuf/proto"
+
 	wire "github.com/tendermint/go-wire"
+
+	"github.com/ethanfrey/proto/options"
+	"github.com/ethanfrey/proto/simple"
 )
 
 // Equaler lets us find objects that can be compared
@@ -80,4 +83,16 @@ func main() {
 		panic(err)
 	}
 
+	rin := &options.Response{
+		Error: false,
+		Data:  &options.Bytes{0x42, 0x00, 0xCA, 0xFE, 0x00},
+		Log:   "drink some mocha",
+	}
+	rout := new(options.Response)
+
+	fmt.Println("\n--> options.Response")
+	err = TrialEncodings(rin, rout)
+	if err != nil {
+		panic(err)
+	}
 }

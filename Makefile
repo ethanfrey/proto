@@ -2,6 +2,8 @@
 
 protoc:
 	protoc --gogoslick_out=. simple/*.proto
+	# this has flags to let us use custom options (check them out better)
+	protoc -I=. -I=vendor --gogo_out=. options/*.proto
 
 install:
 	@go install ./cmd/pbdemo
@@ -55,5 +57,10 @@ tools: protoc-$(MYOS)
 	@go get github.com/gogo/protobuf/gogoproto
 	@go get github.com/gogo/protobuf/protoc-gen-gogofast
 	@go get github.com/gogo/protobuf/protoc-gen-gogoslick
+	# these are for custom extensions
+	@go get github.com/gogo/protobuf/proto
+	@go get github.com/gogo/protobuf/jsonpb
+	@go get github.com/gogo/protobuf/protoc-gen-gogo
+	@go get github.com/gogo/protobuf/gogoproto
 	@# go get github.com/golang/protobuf/protoc-gen-go
 
