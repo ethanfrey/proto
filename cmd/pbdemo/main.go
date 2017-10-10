@@ -8,6 +8,7 @@ import (
 
 	wire "github.com/tendermint/go-wire"
 
+	"github.com/ethanfrey/proto/oneof"
 	"github.com/ethanfrey/proto/options"
 	"github.com/ethanfrey/proto/simple"
 )
@@ -95,4 +96,50 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	tryUnion()
+}
+
+func tryUnion() {
+	uin := &oneof.Union{
+		Type: oneof.Union_BAR,
+		Bar: &oneof.Bar{
+			Data:  []byte{0xF0, 0x0D},
+			Error: true,
+		},
+	}
+	uout := new(oneof.Union)
+
+	fmt.Println("\n--> oneof.union")
+	err := TrialEncodings(uin, uout)
+	if err != nil {
+		panic(err)
+	}
+
+	switch uout.GetType() {
+	case oneof.Union_BAR:
+		fmt.Printf("Found bar: %#v\n", uout.GetBar())
+	}
+
+	oin := &oneof.OneOf{
+		Signature: []byte("verweilen"),
+		Data: &oneof.OneOf_Bar{
+			Bar: &oneof.Bar{
+				Data:  []byte{0xF0, 0x0D},
+				Error: true,
+			},
+		},
+	}
+	oout := new(oneof.OneOf)
+
+	fmt.Println("\n--> oneof.oneof")
+	err = TrialEncodings(oin, oout)
+	if err != nil {
+		panic(err)
+	}
+
+	// switch uout.GetType() {
+	// case oneof.Union_BAR:
+	//     fmt.Printf("Found bar: %#v\n", uout.GetBar())
+	// }
 }

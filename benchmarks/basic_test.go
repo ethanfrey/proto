@@ -7,6 +7,7 @@ import (
 
 	wire "github.com/tendermint/go-wire"
 
+	"github.com/ethanfrey/proto/options"
 	"github.com/ethanfrey/proto/simple"
 )
 
@@ -34,6 +35,14 @@ func makeBook() *simple.Book {
 
 	return &simple.Book{
 		Phones: []*simple.PhoneNumber{&p1, &p2, &p3},
+	}
+}
+
+func makeResponse() *options.Response {
+	return &options.Response{
+		Error: false,
+		Data:  &options.Bytes{0x42, 0x00, 0xCA, 0xFE, 0x00},
+		Log:   "drink some mocha",
 	}
 }
 
@@ -91,6 +100,7 @@ func BenchmarkUnmarshal(b *testing.B) {
 		// cuz, of course, wire is "special" with unmarshalling pointers
 		{"person", makePerson(), new(simple.Person), new(*simple.Person)},
 		{"book", makeBook(), new(simple.Book), new(*simple.Book)},
+		{"response", makeResponse(), new(options.Response), new(*options.Response)},
 	}
 
 	for _, tc := range cases {
@@ -111,6 +121,7 @@ func BenchmarkMarshal(b *testing.B) {
 		// cuz, of course, wire is "special" with unmarshalling pointers
 		{"person", makePerson()},
 		{"book", makeBook()},
+		{"response", makeResponse()},
 	}
 
 	for _, tc := range cases {

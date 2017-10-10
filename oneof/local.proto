@@ -1,0 +1,54 @@
+syntax = "proto3";
+package oneof;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+//option (gogoproto.stable_marshaler_all) = true;
+//option (gogoproto.marshaler_all) = true;
+//option (gogoproto.unmarshaler_all) = true;
+
+option (gogoproto.stringer_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.enum_stringer_all) = true;
+option (gogoproto.goproto_enum_stringer_all) = false;
+
+option (gogoproto.sizer_all) = true;
+option (gogoproto.equal_all) = true;
+
+message Foo {
+    string Name = 1;
+    int32 Age = 2;
+}
+
+message Bar {
+    bytes Data = 1;
+    bool Error = 2;
+}
+
+message Baz {
+    int32 X = 1;
+    int32 Y = 2;
+    int32 Z = 3;
+    string Name = 4;
+}
+
+message Union {
+  enum Type { FOO = 0; BAR = 1; BAZ = 2; }
+
+  // Identifies which field is filled in.
+  Type type = 1;
+
+  // One of the following will be filled in.
+  Foo foo = 2;
+  Bar bar = 3;
+  Baz baz = 4;
+}
+
+message OneOf {
+  bytes Signature = 1;
+  oneof Data {
+      Foo foo = 2;
+      Bar bar = 3;
+      Baz baz = 4;
+  }
+}
