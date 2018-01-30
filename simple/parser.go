@@ -3,21 +3,21 @@ package simple
 import (
 	"fmt"
 	"io"
+
+	"github.com/gogo/protobuf/proto"
 )
 
-func extractField(bz []byte, field int32) ([]byte, error) {
-	var err error
-	var fieldNum int32
+func ExtractField(bz []byte, field int32) ([]byte, error) {
 	for len(bz) > 0 {
 		// parse the header fro field type
-		bz, fieldNum, _, err = parseFieldHeader(bz)
+		rest, fieldNum, _, err := parseFieldHeader(bz)
 		if err != nil {
 			return nil, err
 		}
 
 		// we got it!
 		if fieldNum == field {
-			return bz, nil
+			return rest, nil
 		}
 
 		// skip field
@@ -36,61 +36,57 @@ func extractField(bz []byte, field int32) ([]byte, error) {
 	return nil, fmt.Errorf("Desired field %d not found", field)
 }
 
-func parseFieldHeader(bz []byte) (rest []byte, fieldNum int32, wireType int, err error) {
-	var wire uint64
-	var offset int
-	wire, offset, err = parseUint64(bz)
-	if err != nil {
-		return
-	}
-	wireType = int(wire & 0x7)
-	fieldNum = int32(wire >> 3)
-	if fieldNum <= 0 {
-		err = fmt.Errorf("proto: Person: illegal tag %d (wire type %d)", fieldNum, wireType)
-		return
-	}
-	rest = bz[offset:]
-	return
-}
-
-func parseInt64(bz []byte) (wire int64, offset int, err error) {
+func ParseInt64(bz []byte) (wire int64, offset int, err error) {
 	var uwire uint64
 	uwire, offset, err = parseVarUint(bz, 64)
 	wire = int64(uwire)
 	return
 }
 
-func parseInt32(bz []byte) (wire int32, offset int, err error) {
+func ParseInt32(bz []byte) (wire int32, offset int, err error) {
 	var uwire uint64
 	uwire, offset, err = parseVarUint(bz, 32)
 	wire = int32(uwire)
 	return
 }
 
-func parseInt(bz []byte) (wire int, offset int, err error) {
+func ParseInt(bz []byte) (wire int, offset int, err error) {
 	var uwire uint64
 	uwire, offset, err = parseVarUint(bz, 64)
 	wire = int(uwire)
 	return
 }
 
-func parseUint64(bz []byte) (wire uint64, offset int, err error) {
+func ParseUint64(bz []byte) (wire uint64, offset int, err error) {
 	return parseVarUint(bz, 64)
 }
 
-func parseUint32(bz []byte) (wire uint32, offset int, err error) {
+func ParseUint32(bz []byte) (wire uint32, offset int, err error) {
 	var uwire uint64
 	uwire, offset, err = parseVarUint(bz, 32)
 	wire = uint32(uwire)
 	return
 }
 
-func parseString(bz []byte) (string, error) {
-	size, offset, err := parseInt(bz)
+func ParseStruct(bz []byte, pb proto.Message) error {
+	field, err := ParseBytesField(bz)
 	if err != nil {
-		return "", err
+		return err
 	}
-	return string(bz[offset : offset+size]), nil
+	return proto.Unmarshal(field, pb)
+}
+
+func ParseBytesField(bz []byte) ([]byte, error) {
+	size, offset, err := ParseInt(bz)
+	if err != nil {
+		return nil, err
+	}
+	return bz[offset : offset+size], nil
+}
+
+func ParseString(bz []byte) (string, error) {
+	field, err := ParseBytesField(bz)
+	return string(field), err
 }
 
 // parseVarUint is a helper and returns bytes as uint64
@@ -114,4 +110,21 @@ func parseVarUint(bz []byte, maxShift uint) (wire uint64, offset int, err error)
 		}
 	}
 	return wire, offset, nil
+}
+
+func parseFieldHeader(bz []byte) (rest []byte, fieldNum int32, wireType int, err error) {
+	var wire uint64
+	var offset int
+	wire, offset, err = ParseUint64(bz)
+	if err != nil {
+		return
+	}
+	wireType = int(wire & 0x7)
+	fieldNum = int32(wire >> 3)
+	if fieldNum <= 0 {
+		err = fmt.Errorf("proto: Person: illegal tag %d (wire type %d)", fieldNum, wireType)
+		return
+	}
+	rest = bz[offset:]
+	return
 }
