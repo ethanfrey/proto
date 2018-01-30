@@ -3,9 +3,18 @@ package simple
 import (
 	"testing"
 
+	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func ParseStruct(bz []byte, pb proto.Message) error {
+	field, err := ParseBytesField(bz)
+	if err != nil {
+		return err
+	}
+	return proto.Unmarshal(field, pb)
+}
 
 func TestExtractField(t *testing.T) {
 	// make some data

@@ -3,25 +3,24 @@ package simple
 import (
 	"fmt"
 	"io"
-
-	"github.com/gogo/protobuf/proto"
 )
 
 func ExtractField(bz []byte, field int32) ([]byte, error) {
 	for len(bz) > 0 {
 		// parse the header fro field type
-		rest, fieldNum, _, err := parseFieldHeader(bz)
+		offset, fieldNum, _, err := parseFieldHeader(bz)
 		if err != nil {
 			return nil, err
 		}
 
 		// we got it!
 		if fieldNum == field {
-			return rest, nil
+			return bz[offset:], nil
 		}
 
 		// skip field
-		skippy, err := skipSample(bz)
+		// TODO: this comes from pb.go file... copy code
+		skippy, err := skipField(bz)
 		if err != nil {
 			return nil, err
 		}
@@ -68,14 +67,6 @@ func ParseUint32(bz []byte) (wire uint32, offset int, err error) {
 	return
 }
 
-func ParseStruct(bz []byte, pb proto.Message) error {
-	field, err := ParseBytesField(bz)
-	if err != nil {
-		return err
-	}
-	return proto.Unmarshal(field, pb)
-}
-
 func ParseBytesField(bz []byte) ([]byte, error) {
 	size, offset, err := ParseInt(bz)
 	if err != nil {
@@ -112,9 +103,8 @@ func parseVarUint(bz []byte, maxShift uint) (wire uint64, offset int, err error)
 	return wire, offset, nil
 }
 
-func parseFieldHeader(bz []byte) (rest []byte, fieldNum int32, wireType int, err error) {
+func parseFieldHeader(bz []byte) (offset int, fieldNum int32, wireType int, err error) {
 	var wire uint64
-	var offset int
 	wire, offset, err = ParseUint64(bz)
 	if err != nil {
 		return
@@ -125,6 +115,59 @@ func parseFieldHeader(bz []byte) (rest []byte, fieldNum int32, wireType int, err
 		err = fmt.Errorf("proto: Person: illegal tag %d (wire type %d)", fieldNum, wireType)
 		return
 	}
-	rest = bz[offset:]
 	return
+}
+
+func skipField(bz []byte) (size int, err error) {
+	var i int
+	offset, _, wireType, err := parseFieldHeader(bz)
+	if err != nil {
+		return 0, err
+	}
+	i += offset
+
+	switch wireType {
+	case 0: // varint
+		_, offset, err = ParseUint64(bz[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += offset
+		return i, nil
+	case 1: // fixed 64 byte
+		i += 8
+		return i, nil
+	case 2: // length-delimited
+		size, offset, err := ParseInt(bz[i:])
+		if err != nil {
+			return 0, err
+		}
+		if size < 0 {
+			return 0, ErrInvalidLengthSample
+		}
+		i += offset + size
+		return i, nil
+	case 3: // begin group (deprecated)
+		for {
+			// we stop if it hits 4, and return up to that point
+			_, _, innerWireType, err := parseFieldHeader(bz[i:])
+			if innerWireType == 4 {
+				return i, nil
+			}
+			// otherwise, keep skipping the entries in the group
+			next, err := skipSample(bz[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += next
+		}
+		return i, nil
+	case 4: // end group
+		return i, nil
+	case 5: // fixed 32 bit field (fixed32, float)
+		i += 4
+		return i, nil
+	default:
+		return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+	}
 }
