@@ -1,0 +1,32 @@
+syntax = "proto3";
+package options;
+
+message Error {
+  uint32 code = 1;
+  string log = 2;
+}
+
+message Response {
+  Error error = 1;
+  oneof result{
+    ResponseInfo info = 2;
+    ResponseDeliverTx deliver_tx = 3;
+  };
+}
+
+message ResponseInfo {
+  string data = 1;
+  string version = 2;
+  int64 last_block_height = 3;
+  bytes last_block_app_hash = 4;
+}
+
+message ResponseDeliverTx{
+  bytes    data = 1;
+  repeated KVPair tags = 2;
+}
+
+message KVPair{
+    string name = 1;
+    string value = 2;
+}

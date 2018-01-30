@@ -6,3 +6,8 @@ message Person {
   int32 age = 2;
   string email = 3;
 }
+
+message Employee {
+    string title = 1;
+    Person person = 2;
+}

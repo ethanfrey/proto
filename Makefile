@@ -5,6 +5,7 @@ protoc:
 	# this has flags to let us use custom options (check them out better)
 	protoc -I=. -I=vendor --gogo_out=. options/*.proto
 	protoc -I=. -I=vendor --gogo_out=. oneof/*.proto
+	protoc -I=. -I=vendor --gogo_out=. errors/*.proto
 
 install:
 	@go install ./cmd/pbdemo

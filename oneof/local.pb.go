@@ -364,10 +364,7 @@ func (x Union_Type) String() string {
 }
 func (this *Foo) Equal(that interface{}) bool {
 	if that == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	}
 
 	that1, ok := that.(*Foo)
@@ -380,10 +377,7 @@ func (this *Foo) Equal(that interface{}) bool {
 		}
 	}
 	if that1 == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	} else if this == nil {
 		return false
 	}
@@ -397,10 +391,7 @@ func (this *Foo) Equal(that interface{}) bool {
 }
 func (this *Bar) Equal(that interface{}) bool {
 	if that == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	}
 
 	that1, ok := that.(*Bar)
@@ -413,10 +404,7 @@ func (this *Bar) Equal(that interface{}) bool {
 		}
 	}
 	if that1 == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	} else if this == nil {
 		return false
 	}
@@ -430,10 +418,7 @@ func (this *Bar) Equal(that interface{}) bool {
 }
 func (this *Baz) Equal(that interface{}) bool {
 	if that == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	}
 
 	that1, ok := that.(*Baz)
@@ -446,10 +431,7 @@ func (this *Baz) Equal(that interface{}) bool {
 		}
 	}
 	if that1 == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	} else if this == nil {
 		return false
 	}
@@ -469,10 +451,7 @@ func (this *Baz) Equal(that interface{}) bool {
 }
 func (this *Union) Equal(that interface{}) bool {
 	if that == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	}
 
 	that1, ok := that.(*Union)
@@ -485,10 +464,7 @@ func (this *Union) Equal(that interface{}) bool {
 		}
 	}
 	if that1 == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	} else if this == nil {
 		return false
 	}
@@ -508,10 +484,7 @@ func (this *Union) Equal(that interface{}) bool {
 }
 func (this *OneOf) Equal(that interface{}) bool {
 	if that == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	}
 
 	that1, ok := that.(*OneOf)
@@ -524,10 +497,7 @@ func (this *OneOf) Equal(that interface{}) bool {
 		}
 	}
 	if that1 == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	} else if this == nil {
 		return false
 	}
@@ -547,10 +517,7 @@ func (this *OneOf) Equal(that interface{}) bool {
 }
 func (this *OneOf_Foo) Equal(that interface{}) bool {
 	if that == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	}
 
 	that1, ok := that.(*OneOf_Foo)
@@ -563,10 +530,7 @@ func (this *OneOf_Foo) Equal(that interface{}) bool {
 		}
 	}
 	if that1 == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	} else if this == nil {
 		return false
 	}
@@ -577,10 +541,7 @@ func (this *OneOf_Foo) Equal(that interface{}) bool {
 }
 func (this *OneOf_Bar) Equal(that interface{}) bool {
 	if that == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	}
 
 	that1, ok := that.(*OneOf_Bar)
@@ -593,10 +554,7 @@ func (this *OneOf_Bar) Equal(that interface{}) bool {
 		}
 	}
 	if that1 == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	} else if this == nil {
 		return false
 	}
@@ -607,10 +565,7 @@ func (this *OneOf_Bar) Equal(that interface{}) bool {
 }
 func (this *OneOf_Baz) Equal(that interface{}) bool {
 	if that == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	}
 
 	that1, ok := that.(*OneOf_Baz)
@@ -623,10 +578,7 @@ func (this *OneOf_Baz) Equal(that interface{}) bool {
 		}
 	}
 	if that1 == nil {
-		if this == nil {
-			return true
-		}
-		return false
+		return this == nil
 	} else if this == nil {
 		return false
 	}
