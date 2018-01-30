@@ -5,9 +5,11 @@ import (
 	"io"
 )
 
+// ExtractField goes through this object, field by field until we
+// find the field we want.
 func ExtractField(bz []byte, field int32) ([]byte, error) {
 	for len(bz) > 0 {
-		// parse the header fro field type
+		// parse the header from field type
 		offset, fieldNum, _, err := parseFieldHeader(bz)
 		if err != nil {
 			return nil, err
@@ -33,6 +35,31 @@ func ExtractField(bz []byte, field int32) ([]byte, error) {
 		bz = bz[skippy:]
 	}
 	return nil, fmt.Errorf("Desired field %d not found", field)
+}
+
+// ExtractPath digs into sub-objects, selecting field #1,
+// then field #2 from the bytes that come out, then...
+// Returns the final field or an error if anything failed.
+func ExtractPath(bz []byte, next int32, rest ...int32) ([]byte, error) {
+	field, err := ExtractField(bz, next)
+	if err != nil {
+		return nil, err
+	}
+	// recursion guard - we got to the end
+	if len(rest) == 0 {
+		return field, nil
+	}
+
+	// pop one off the rest list
+	next, rest = rest[0], rest[1:]
+	// and extract the bytes from the embedded struct in the field
+	bz, err = ParseBytesField(field)
+	if err != nil {
+		return nil, err
+	}
+
+	// repeat on sub-structure
+	return ExtractPath(bz, next, rest...)
 }
 
 func ParseInt64(bz []byte) (wire int64, offset int, err error) {

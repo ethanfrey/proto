@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gogo/protobuf/proto"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -47,4 +48,21 @@ func TestExtractField(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, int32(67), p.Age)
 	assert.Equal(t, e.Person.Name, p.Name)
+
+	field, err = ExtractPath(bz, 1)
+	assert.NoError(t, err)
+	title, err = ParseString(field)
+	assert.Equal(t, e.Title, title)
+
+	// get the age, then the email
+	field, err = ExtractPath(bz, 2, 2)
+	assert.NoError(t, err)
+	age, _, err := ParseInt32(field)
+	assert.Equal(t, e.Person.Age, age)
+
+	field, err = ExtractPath(bz, 2, 3)
+	assert.NoError(t, err)
+	email, err := ParseString(field)
+	assert.Equal(t, e.Person.Email, email)
+
 }
